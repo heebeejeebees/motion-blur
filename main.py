@@ -3,6 +3,21 @@ import time
 import argparse
 from pathlib import Path
 
+
+def progressbar(it, prefix=""):
+    count = len(it)
+
+    def show(j):
+        x = int(60*j/count)
+        print(f"{prefix}[{u'█'*x}{('.'*(60-x))}] {j}/{count}",
+              end='\r', flush=True)
+    show(0)
+    for i, item in enumerate(it):
+        yield item
+        show(i+1)
+    print("\n", flush=True)
+
+
 def main():
     # CLI arguments
     parser = argparse.ArgumentParser()
@@ -26,7 +41,7 @@ def main():
     processed_frames = []
 
     # process clarity of every frame
-    for fno in range(0, total_frames):
+    for fno in progressbar(range(0, total_frames), "1/2:"):
         video.set(cv2.CAP_PROP_POS_FRAMES, fno)
         _, image = video.read()
         # calculate clarity (the higher, the clearer)
@@ -40,7 +55,7 @@ def main():
     # extract multiple frames of similar clarity
     allowance_rate = (100 - p.percentage) / 100
     min_clarity = max_clarity * allowance_rate
-    for frame in processed_frames:
+    for frame in progressbar(processed_frames, "2/2:"):
         if (frame['clarity'] > min_clarity):
             cv2.imwrite(
                 f"{p.outputDirectory}/{frame['fno']}.png", frame['image'])
