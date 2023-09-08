@@ -1,2 +1,1 @@
-rm -r output/*
-echo output folder emptied
+rm -r output/* && echo output folder emptied
