@@ -162,7 +162,7 @@ cython_debug/
 .DS_Store
 
 assets/
-output/
+output/*
 
 *.mp4
 *.mov

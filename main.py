@@ -1,13 +1,26 @@
 import cv2
 import time
+import argparse
+from pathlib import Path
+
+# CLI arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("input", type=argparse.FileType('r'))
+parser.add_argument("-o", "--outputDirectory", type=Path,
+                    help="path for pictures", default="output")
+parser.add_argument("-t", "--threads", type=int,
+                    help="no. of threads", default=8)
+parser.add_argument("-p", "--percentage", type=int,
+                    help="percentage less of highest clarity found as minimum clarity", default=5)
+
+p = parser.parse_args()
 
 # configs
-TOP_PERCENTAGE = 5
+FIRST_FNO = 0
+LAST_FNO = 0
 
 # open video file
-video = cv2.VideoCapture('assets/sample.mov')
-
-# TODO allow cropping of video
+video = cv2.VideoCapture(p.input.name)
 
 # get metadata
 fps = int(video.get(cv2.CAP_PROP_FPS))
@@ -22,9 +35,9 @@ max_clarity = 0
 all_fno_frame = {}
 
 # TODO multithreaded
-
 # process clarity of every frame
-for fno in range(0, total_frames):
+LAST_FNO = total_frames if LAST_FNO <= FIRST_FNO else LAST_FNO
+for fno in range(FIRST_FNO, LAST_FNO):
     video.set(cv2.CAP_PROP_POS_FRAMES, fno)
     _, image = video.read()
     # calculate clarity (the higher, the clearer)
@@ -36,11 +49,11 @@ for fno in range(0, total_frames):
         max_clarity = clarity
 
 # extract multiple frames of similar clarity
-allowance_rate = (100 - TOP_PERCENTAGE) / 100
+allowance_rate = (100 - p.percentage) / 100
 min_clarity = max_clarity * allowance_rate
 for fno, frame in all_fno_frame.items():
     if (frame['clarity'] > min_clarity):
-        cv2.imwrite(f'output/{fno}.png', frame['image'])
+        cv2.imwrite(f'{p.outputDirectory}/{fno}.png', frame['image'])
 
 # calculate time end to process
 end = time.time()
