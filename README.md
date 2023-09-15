@@ -8,5 +8,5 @@ python main.py ./path/to/input.mov [options]
 ```
 
 ### Options
-  -o, --outputDirectory        path for pictures, default=output
-  -p, --percentage             percentage less of highest clarity found as minimum clarity, default=5
+-  -o, --outputDirectory        path for pictures, default=output
+-  -p, --percentage             percentage less of highest clarity found as minimum clarity, default=5
