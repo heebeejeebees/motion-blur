@@ -24,8 +24,6 @@ def main():
     parser.add_argument("inputFile", type=argparse.FileType('r'))
     parser.add_argument("-o", "--outputDirectory", type=Path,
                         help="path for pictures", default="output")
-    parser.add_argument("-t", "--threads", type=int,
-                        help="no. of threads", default=8)
     parser.add_argument("-p", "--percentage", type=int,
                         help="percentage less of highest clarity found as minimum clarity", default=5)
     p = parser.parse_args()
