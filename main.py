@@ -26,9 +26,9 @@ def calculate_frame_range(total_frames: int, fps: float, time_start: str, time_e
         e = time.strptime(time_end,'%M:%S')
     except (ValueError, TypeError):
       raise Exception("Check your timestamp options and try again.")
-    start_fno = int(datetime.timedelta(minutes=s.tm_min,seconds=s.tm_sec).total_seconds() * fps)
+    start_fno = int(round(datetime.timedelta(minutes=s.tm_min,seconds=s.tm_sec).total_seconds() * fps))
     end_secs = datetime.timedelta(minutes=e.tm_min,seconds=e.tm_sec).total_seconds()
-    end_fno = int(end_secs * fps) if end_secs != 0 else total_frames
+    end_fno = int(round(end_secs * fps)) if end_secs != 0 else total_frames
     return range(start_fno, end_fno)
 
 
